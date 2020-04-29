@@ -17,33 +17,6 @@ let playable = true;
 const correctLetters = [];
 const wrongLetters = [];
 
-// Event Listeners
-
-// Keydown press
-window.addEventListener('keydown', e => {
-  if(playable) {
-    if(e.keyCode >= 65 && e.keyCode <= 90) {
-      const letter = e.key.toLowerCase();
-
-      if(selectedWord.includes(letter)) {
-        if(!correctLetters.includes(letter)) {
-          correctLetters.push(letter);
-          displayWord();
-        } else {
-          showNotification();
-        }
-      } else {
-        if(!wrongLetters.includes(letter)) {
-          wrongLetters.push(letter);
-          updateWrongLettersEl();
-        } else {
-          showNotification();
-        }
-      }
-    }
-  }
-});
-
 // Show hidden word
 function displayWord() {
 	wordEl.innerHTML = `
@@ -86,4 +59,48 @@ function updateWrongLettersEl() {
 		} else {
 			part.style.display = 'none';
 		}
-	})};
+  })};
+  
+  // Check if lost
+	if (wrongLetters.length === figureParts.length) {
+		finalMessage.innerText = 'Unfortunately you lost. 😕';
+		finalMessageRevealWord.innerText = `...the word was: ${selectedWord}`;
+		popup.style.display = 'flex';
+
+		playable = false;
+	};
+
+// Show notification
+function showNotification() {
+	notification.classList.add('show');
+
+	setTimeout(() => {
+		notification.classList.remove('show');
+	}, 2000);
+};
+
+// Event Listener
+// Keydown press
+window.addEventListener('keydown', e => {
+  if(playable) {
+    if(e.keyCode >= 65 && e.keyCode <= 90) {
+      const letter = e.key.toLowerCase();
+
+      if(selectedWord.includes(letter)) {
+        if(!correctLetters.includes(letter)) {
+          correctLetters.push(letter);
+          displayWord();
+        } else {
+          showNotification();
+        }
+      } else {
+        if(!wrongLetters.includes(letter)) {
+          wrongLetters.push(letter);
+          updateWrongLettersEl();
+        } else {
+          showNotification();
+        }
+      }
+    }
+  }
+});
